@@ -36,23 +36,6 @@ public class ActivityTest {
     @Autowired
     private SecurityUtil securityUtil;//SpringSecurity相关的工具类
 
-    @Test
-    public void testDeploy(){
-        // 1. 创建ProcessEngine对象
-        ProcessEngine processEngine = ProcessEngines.getDefaultProcessEngine();
-        // 2. 得到RepositoryService实例
-        RepositoryService repositoryService = processEngine.getRepositoryService();
-        // 3. 部署
-        Deployment deployment = repositoryService.createDeployment()
-                .addClasspathResource("processes/leaveProcess.xml")
-                //.addClasspathResource("processes/MyProcess.bpmn")
-                .name("请假申请单流程")
-                .deploy();
-        // 4. 输出部署的一些信息
-        System.out.println(deployment.getName());
-        System.out.println(deployment.getId());
-    }
-
     //流程定义信息的查看
     @Test
     public void testDefinition(){
