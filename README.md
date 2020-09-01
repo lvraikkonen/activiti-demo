@@ -74,6 +74,31 @@ Activiti 是一个工作流引擎（其实就是一堆 jar 包 API），业务�
 
 
 
+请假流程example：
+
+```
+活动ID:4ba54191-ec58-11ea-8247-00ff4adba090
+流程实例ID:4ba0fbcd-ec58-11ea-8247-00ff4adba090
+活动名称：用户提交申请
+办理人：zhangsan
+开始时间：Tue Sep 01 21:37:35 CST 2020
+结束时间：Tue Sep 01 21:40:42 CST 2020
+活动ID:bad04602-ec58-11ea-aa39-00ff4adba090
+流程实例ID:4ba0fbcd-ec58-11ea-8247-00ff4adba090
+活动名称：部门经理审批
+办理人：lisi
+开始时间：Tue Sep 01 21:40:42 CST 2020
+结束时间：Tue Sep 01 21:43:47 CST 2020
+活动ID:28f0901b-ec59-11ea-9a3b-00ff4adba090
+流程实例ID:4ba0fbcd-ec58-11ea-8247-00ff4adba090
+活动名称：人事审批
+办理人：wangwu
+开始时间：Tue Sep 01 21:43:47 CST 2020
+结束时间：Tue Sep 01 21:45:15 CST 2020
+```
+
+
+
 ## 三、Activiti7表定义
 
 

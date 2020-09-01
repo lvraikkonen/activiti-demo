@@ -37,12 +37,12 @@ public class BootActivitiApplicationTests {
     @Test // 部署流程
     public void deploy() {
         securityUtil.logInAs("salaboy");
-        String bpmnName = "MyProcess";
+        String bpmnName = "holiday";
         DeploymentBuilder deploymentBuilder = repositoryService.createDeployment().name("请假流程");
         Deployment deployment = null;
         try {
-            deployment = deploymentBuilder.addClasspathResource("processes/" + bpmnName + ".bpmn")
-                                          .addClasspathResource("processes/" + bpmnName + ".png").deploy();
+            deployment = deploymentBuilder.addClasspathResource("processes/" + bpmnName + ".bpmn").deploy();
+                                          //.addClasspathResource("processes/" + bpmnName + ".png").deploy();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -31,6 +31,9 @@ public class DemoApplicationConfiguration {
                 {"erdemedeiros", "password", "ROLE_ACTIVITI_USER", "GROUP_activitiTeam"},
                 {"other", "password", "ROLE_ACTIVITI_USER", "GROUP_otherTeam"},
                 {"admin", "password", "ROLE_ACTIVITI_ADMIN"},
+                {"zhangsan", "password", "ROLE_ACTIVITI_USER", "GROUP_employeeTeam"},
+                {"lisi", "password", "ROLE_ACTIVITI_USER", "GROUP_deptManagerTeam"},
+                {"wangwu", "password", "ROLE_ACTIVITI_USER", "GROUP_HRTeam"},
         };
 
         for (String[] user : usersGroupsAndRoles) {
