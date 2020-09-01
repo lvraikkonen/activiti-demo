@@ -1,12 +1,12 @@
 package com.claus.activiti;
 
 import com.claus.activiti.config.SecurityUtil;
-import org.activiti.api.process.model.ProcessDefinition;
-import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.runtime.ProcessRuntime;
 import org.activiti.api.runtime.shared.query.Page;
 import org.activiti.api.runtime.shared.query.Pageable;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.api.task.model.builders.TaskPayloadBuilder;
@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +47,23 @@ public class ActivitiTest {
     public void startProcessInstance() {
         System.out.println("Number of process definitions : "+ repositoryService.createProcessDefinitionQuery().count());
         System.out.println("Number of tasks : " + taskService.createTaskQuery().count());
-        runtimeService.startProcessInstanceByKey("holiday");
+        runtimeService.startProcessInstanceByKey("holiday", "busiKey"); // 启动流程实例的时候指定businesskey(业务标识)
+    }
+
+    /**
+     * 查询指定流程的所有实例
+     */
+    @Test
+    public void processInstanceQuery() {
+        String processDefinitionKey = "holiday";
+        List<ProcessInstance> processInstanceList = runtimeService.createProcessInstanceQuery().processDefinitionKey(processDefinitionKey).list();
+        for (ProcessInstance instance : processInstanceList) {
+            System.out.println("流程实例id： " + instance.getProcessInstanceId());
+            System.out.println("所属流程定义id： " + instance.getProcessDefinitionId());
+            System.out.println("是否执行完成： " + instance.isEnded());
+            System.out.println("是否暂停： " + instance.isSuspended());
+            System.out.println(" 当 前 活 动 标 识 ： " + instance.getActivityId());
+        }
     }
 
     /**
@@ -113,6 +130,79 @@ public class ActivitiTest {
             System.out.println("办理人：" + hai.getAssignee());
             System.out.println("开始时间：" + hai.getStartTime());
             System.out.println("结束时间：" + hai.getEndTime());
+        }
+    }
+
+
+    /**
+     * 删除已经部署的流程定义
+     * delete from ACT_RE_DEPLOYMENT 流程部署信息表;
+     * ACT_RE_PROCDEF 流程定义数据表;
+     * ACT_GE_BYTEARRAY 二进制数据表;
+     */
+    @Test
+    public void deleteProcessDefinition(){
+        //执行删除流程定义  参数代表流程部署的id
+        repositoryService.deleteDeployment("b10a151b-3366-11ea-bc18-30b49ec7161f");
+    }
+
+    /**
+     * 删除流程实例
+     */
+    @Test
+    public void deleteProcessInstance(){
+        String processInstanceId = "80a5703b-35c0-11ea-aa1a-30b49ec7161f";
+
+        //当前流程实例没有完全结束的时候，删除流程实例就会失败
+        runtimeService.deleteProcessInstance(processInstanceId,"删除原因");
+    }
+
+
+
+    /**
+     * 操作流程的挂起、激活
+     */
+    @Test
+    public void activateProcessDefinitionById(){
+        //查询流程定义对象
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionKey("myProcess_1").singleResult();
+        //当前流程定义的实例是否都为暂停状态
+        boolean suspended = processDefinition.isSuspended();
+
+        String processDefinitionId = processDefinition.getId();
+
+        if(suspended){
+            //挂起状态则激活
+            repositoryService.activateProcessDefinitionById(processDefinitionId,true,new Date());
+            System.out.println("流程定义："+processDefinitionId+"激活");
+        }else{
+            //激活状态则挂起
+            repositoryService.suspendProcessDefinitionById(processDefinitionId,true,new Date());
+            System.out.println("流程定义："+processDefinitionId+"挂起");
+        }
+    }
+
+
+    /**
+     * 单个流程实例的挂起，激活
+     */
+    @Test
+    public void activateProcessInstanceById(){
+        //查询流程实例对象
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId("80a5703b-35c0-11ea-aa1a-30b49ec7161f").singleResult();
+
+        //当前流程定义的实例是否都为暂停状态
+        boolean suspended = processInstance.isSuspended();
+
+        String processInstanceId = processInstance.getId();
+        if(suspended){
+            //激活
+            runtimeService.activateProcessInstanceById(processInstanceId);
+            System.out.println("流程："+processInstanceId+"激活");
+        }else{
+            //挂起
+            runtimeService.suspendProcessInstanceById(processInstanceId);
+            System.out.println("流程："+processInstanceId+"挂起");
         }
     }
 }
