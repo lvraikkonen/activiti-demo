@@ -1,4 +1,4 @@
-package com.claus.config;
+package com.claus.activiti.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

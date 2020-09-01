@@ -1,6 +1,6 @@
-package com.claus;
+package com.claus.activiti;
 
-import com.claus.config.SecurityUtil;
+import com.claus.activiti.config.SecurityUtil;
 import org.activiti.api.process.model.ProcessInstance;
 import org.activiti.api.process.model.builders.ProcessPayloadBuilder;
 import org.activiti.api.process.runtime.ProcessRuntime;
@@ -41,8 +41,8 @@ public class BootActivitiApplicationTests {
         DeploymentBuilder deploymentBuilder = repositoryService.createDeployment().name("请假流程");
         Deployment deployment = null;
         try {
-            deployment = deploymentBuilder.addClasspathResource("processes/" + bpmnName + ".bpmn").deploy();
-              //      .addClasspathResource("processes/" + bpmnName + ".png").deploy();
+            deployment = deploymentBuilder.addClasspathResource("processes/" + bpmnName + ".bpmn")
+                                          .addClasspathResource("processes/" + bpmnName + ".png").deploy();
         } catch (Exception e) {
             e.printStackTrace();
         }

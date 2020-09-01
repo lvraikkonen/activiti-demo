@@ -34,6 +34,7 @@ spring:
 logging:
   level:
     com.ascendant: debug
+    logging.level.org.activiti.engine.impl.persistence.entity: debug
   pattern:
     console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %clr(-%5p)  %clr(${PID:- }){magenta} --- %clr([%15.15t]){faint} %highlight(%-80.80logger{300}){cyan} %clr(:) %m %n%wEx"
 
