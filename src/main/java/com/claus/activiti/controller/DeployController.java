@@ -45,7 +45,7 @@ public class DeployController {
         try {
             deployment = deploymentBuilder
                     .addClasspathResource("processes/"+ bpmnName +".bpmn")
-                    .addClasspathResource("processes/"+ bpmnName +".png")
+                    //.addClasspathResource("processes/"+ bpmnName +".png")
                     .deploy();
         } catch (Exception e) {
             restMessage = RestMessage.fail("部署失败", e.getMessage());
