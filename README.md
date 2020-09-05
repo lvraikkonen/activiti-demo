@@ -74,27 +74,53 @@ Activiti 是一个工作流引擎（其实就是一堆 jar 包 API），业务�
 
 
 
+![](https://github.com/lvraikkonen/activiti-demo/blob/master/src/main/resources/processes/holiday_with_gateway.png)
+
 请假流程example：
 
 ```
-活动ID:4ba54191-ec58-11ea-8247-00ff4adba090
-流程实例ID:4ba0fbcd-ec58-11ea-8247-00ff4adba090
-活动名称：用户提交申请
+活动ID:2228681b-ef65-11ea-bb67-00ff4adba090
+流程实例ID:222533bd-ef65-11ea-bb67-00ff4adba090
+活动名称：employee apply holiday
 办理人：zhangsan
-开始时间：Tue Sep 01 21:37:35 CST 2020
-结束时间：Tue Sep 01 21:40:42 CST 2020
-活动ID:bad04602-ec58-11ea-aa39-00ff4adba090
-流程实例ID:4ba0fbcd-ec58-11ea-8247-00ff4adba090
-活动名称：部门经理审批
+开始时间：Sat Sep 05 18:47:03 CST 2020
+结束时间：Sat Sep 05 18:50:16 CST 2020
+活动ID:9599c83d-ef65-11ea-bb67-00ff4adba090
+流程实例ID:222533bd-ef65-11ea-bb67-00ff4adba090
+活动名称：dept manager check
 办理人：lisi
-开始时间：Tue Sep 01 21:40:42 CST 2020
-结束时间：Tue Sep 01 21:43:47 CST 2020
-活动ID:28f0901b-ec59-11ea-9a3b-00ff4adba090
-流程实例ID:4ba0fbcd-ec58-11ea-8247-00ff4adba090
-活动名称：人事审批
+开始时间：Sat Sep 05 18:50:16 CST 2020
+结束时间：Sat Sep 05 19:45:18 CST 2020
+活动ID:45ab4f8d-ef6d-11ea-818d-00ff4adba090
+流程实例ID:222533bd-ef65-11ea-bb67-00ff4adba090
+活动名称：boss check
 办理人：wangwu
-开始时间：Tue Sep 01 21:43:47 CST 2020
-结束时间：Tue Sep 01 21:45:15 CST 2020
+开始时间：Sat Sep 05 19:45:18 CST 2020
+结束时间：Sat Sep 05 19:48:59 CST 2020
+活动ID:c90764af-ef6d-11ea-818d-00ff4adba090
+流程实例ID:222533bd-ef65-11ea-bb67-00ff4adba090
+活动名称：HR logged
+办理人：renliu
+开始时间：Sat Sep 05 19:48:59 CST 2020
+结束时间：Sat Sep 05 19:50:13 CST 2020
+活动ID:f5a31245-ef6d-11ea-818d-00ff4adba090
+流程实例ID:222533bd-ef65-11ea-bb67-00ff4adba090
+活动名称：kaoqin record
+办理人：kaoqin2
+开始时间：Sat Sep 05 19:50:13 CST 2020
+结束时间：Sat Sep 05 19:54:19 CST 2020
+活动ID:f5a31243-ef6d-11ea-818d-00ff4adba090
+流程实例ID:222533bd-ef65-11ea-bb67-00ff4adba090
+活动名称：finance record
+办理人：fin1
+开始时间：Sat Sep 05 19:50:13 CST 2020
+结束时间：Sat Sep 05 19:52:41 CST 2020
+活动ID:884a4121-ef6e-11ea-818d-00ff4adba090
+流程实例ID:222533bd-ef65-11ea-bb67-00ff4adba090
+活动名称：notice employee
+办理人：tongzhi
+开始时间：Sat Sep 05 19:54:20 CST 2020
+结束时间：Sat Sep 05 19:58:45 CST 2020
 ```
 
 

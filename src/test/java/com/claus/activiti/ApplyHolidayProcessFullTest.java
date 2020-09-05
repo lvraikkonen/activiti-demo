@@ -87,7 +87,7 @@ public class ApplyHolidayProcessFullTest {
 
     @Test // 查询指定流程的所有实例
     public void processInstanceQuery() {
-        String processDefinitionKey = "holiday_var";
+        String processDefinitionKey = "holiday_gateway";
         List<ProcessInstance> processInstanceList = runtimeService.createProcessInstanceQuery().processDefinitionKey(processDefinitionKey).list();
         for (ProcessInstance instance : processInstanceList) {
             System.out.println("流程实例id： " + instance.getProcessInstanceId());
@@ -103,7 +103,7 @@ public class ApplyHolidayProcessFullTest {
         //根据流程定义的key,负责人assignee来实现当前用户的任务列表查询
         List<Task> list = taskService.createTaskQuery()
                 .processDefinitionKey("holiday_gateway")
-                .taskAssignee("renliu")
+                .taskAssignee("tongzhi")
                 .list();
 
         if (list != null && list.size() > 0) {
@@ -134,7 +134,7 @@ public class ApplyHolidayProcessFullTest {
 
     @Test // 根据候选人查询组任务
     public void findGroupTaskList(){
-        String candidateUser = "fin1";
+        String candidateUser = "kaoqin1";
         List<Task> list = taskService.createTaskQuery()
                 .processDefinitionKey("holiday_gateway")
                 .taskCandidateUser(candidateUser) // 查询该候选人的任务
@@ -151,7 +151,7 @@ public class ApplyHolidayProcessFullTest {
 
     @Test
     public void claimTask(){
-        String userId = "fin2";
+        String userId = "kaoqin1";
         // 查询
         Task task = taskService.createTaskQuery()
                                .processDefinitionKey("holiday_gateway")
@@ -167,7 +167,7 @@ public class ApplyHolidayProcessFullTest {
 
     @Test // 用户归还任务，将个人任务变为组任务
     public void setAssigneeToGroupTask() {
-        String taskId = "fc833e1c-ede3-11ea-b012-00ff4adba090";
+        String taskId = "faecb5e2-ef5f-11ea-b30f-00ff4adba090";
         String userId = "fin1";
 
         // 校验当前userID是否是taskId的负责人，只有负责人才能归还组任务
@@ -198,7 +198,7 @@ public class ApplyHolidayProcessFullTest {
     @Test
     public void completeTask(){
         //任务ID
-        String taskId = "fc833e1c-ede3-11ea-b012-00ff4adba090";
+        String taskId = "a994aa86-ef61-11ea-be9a-00ff4adba090";
         taskService.complete(taskId);
         System.out.println("完成任务：任务ID："+taskId);
     }
@@ -209,7 +209,8 @@ public class ApplyHolidayProcessFullTest {
     @Test
     public void queryHistoryTask() {
         List<HistoricTaskInstance> list = historyService.createHistoricTaskInstanceQuery() // 创建历史活动实例查询
-                .processInstanceId("dc08fdd6-ede2-11ea-a886-00ff4adba090") // 执行流程实例id
+                .processDefinitionKey("holiday_gateway")
+//                .processInstanceId("f616fd5a-ef5d-11ea-b00c-00ff4adba090") // 执行流程实例id
                 .orderByTaskCreateTime()
                 .asc()
                 .list();

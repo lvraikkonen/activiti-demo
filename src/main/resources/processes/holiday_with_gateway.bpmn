@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1599220902617" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
-  <process id="holiday_gateway" isClosed="false" isExecutable="true" name="请假审批流程网关" processType="None">
+  <process id="holiday_gateway" isClosed="false" isExecutable="true" name="holiday apply process" processType="None">
     <startEvent id="_2" name="StartEvent"/>
-    <userTask activiti:assignee="${employee}" activiti:exclusive="true" id="_3" name="提交请假申请"/>
-    <userTask activiti:assignee="${deptManager}" activiti:exclusive="true" id="_4" name="部门经理审批"/>
-    <exclusiveGateway gatewayDirection="Unspecified" id="_5" name="请假天数判断"/>
-    <userTask activiti:assignee="${boss}" activiti:exclusive="true" id="_6" name="总经理审�?"/>
-    <userTask activiti:assignee="${hr}" activiti:exclusive="true" id="_7" name="人事审批"/>
-    <userTask activiti:candidateUsers="fin1,fin2,fin3" activiti:exclusive="true" id="_8" name="财务审批"/>
+    <userTask activiti:assignee="${employee}" activiti:exclusive="true" id="_3" name="employee apply holiday"/>
+    <userTask activiti:assignee="${deptManager}" activiti:exclusive="true" id="_4" name="dept manager check"/>
+    <exclusiveGateway gatewayDirection="Unspecified" id="_5" name="check holiday length"/>
+    <userTask activiti:assignee="${boss}" activiti:exclusive="true" id="_6" name="boss check"/>
+    <userTask activiti:assignee="${hr}" activiti:exclusive="true" id="_7" name="HR logged"/>
+    <userTask activiti:candidateUsers="fin1,fin2,fin3" activiti:exclusive="true" id="_8" name="finance record"/>
     <parallelGateway gatewayDirection="Unspecified" id="_9" name="ParallelGateway"/>
-    <userTask activiti:candidateUsers="kaoqin1,kaoqin2" activiti:exclusive="true" id="_10" name="考勤审批"/>
-    <userTask activiti:assignee="tongzhi" activiti:exclusive="true" id="_11" name="通知结果"/>
+    <userTask activiti:candidateUsers="kaoqin1,kaoqin2" activiti:exclusive="true" id="_10" name="kaoqin record"/>
+    <userTask activiti:assignee="tongzhi" activiti:exclusive="true" id="_11" name="notice employee"/>
     <endEvent id="_12" name="EndEvent"/>
     <parallelGateway gatewayDirection="Unspecified" id="_13" name="ParallelGateway"/>
     <sequenceFlow id="_14" sourceRef="_2" targetRef="_3"/>
@@ -56,7 +56,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="_5" id="Shape-_5" isMarkerVisible="false">
-        <omgdc:Bounds height="32.0" width="32.0" x="435.0" y="260.0"/>
+        <omgdc:Bounds height="32.0" width="32.0" x="425.0" y="260.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
@@ -124,7 +124,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_17" id="BPMNEdge__17" sourceElement="_5" targetElement="_6">
-        <omgdi:waypoint x="467.0" y="276.0"/>
+        <omgdi:waypoint x="457.0" y="276.0"/>
         <omgdi:waypoint x="620.0" y="207.5"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
@@ -132,7 +132,7 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_16" id="BPMNEdge__16" sourceElement="_4" targetElement="_5">
         <omgdi:waypoint x="355.0" y="182.5"/>
-        <omgdi:waypoint x="435.0" y="276.0"/>
+        <omgdi:waypoint x="425.0" y="276.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
@@ -145,7 +145,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_18" id="BPMNEdge__18" sourceElement="_5" targetElement="_7">
-        <omgdi:waypoint x="467.0" y="276.0"/>
+        <omgdi:waypoint x="457.0" y="276.0"/>
         <omgdi:waypoint x="610.0" y="367.5"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>

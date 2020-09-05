@@ -76,4 +76,18 @@ public class TaskManagementController {
 
         return "Completed Task: " + taskId;
     }
+
+    @GetMapping("/getTaskFromGroup/{taskId}")
+    @ApiOperation(value = "查询组任务并拾取", notes = "查询组任务并拾取")
+    public String queryGroupTaskAndClaim(@PathVariable(value="taskId") String taskId) {
+        Task task = taskRuntime.task(taskId);
+        logger.info("get a task {} ", task);
+        task = taskRuntime.claim(TaskPayloadBuilder.claim().withTaskId(taskId).build());
+        logger.info("Current user claim a task {} ", task);
+
+        // // 释放claim的任务进入组任务 TObeTEST
+        // taskRuntime.release(TaskPayloadBuilder.release().withTaskId(taskId).build());
+
+        return "Claimed Task: " + task.getId();
+    }
 }

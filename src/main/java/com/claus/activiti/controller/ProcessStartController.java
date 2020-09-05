@@ -1,5 +1,6 @@
 package com.claus.activiti.controller;
 
+import com.claus.activiti.model.Holiday;
 import com.claus.activiti.utils.RestMessage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -11,6 +12,9 @@ import org.activiti.api.process.runtime.ProcessRuntime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author xugj<br>
@@ -30,22 +34,31 @@ public class ProcessStartController {
     }
 
     @GetMapping("/start-process/{processDefinitionKey}")
-    @ApiOperation(value = "启动流程实例", notes = "启动流程实例")
+    @ApiOperation(value = "启动流程实例", notes = "启动流程实例_带参数")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "processDefinitionKey", value = "定义流程KEY", dataType = "String", paramType = "path", example = "SampleProcess")
+            @ApiImplicitParam(name = "processDefinitionKey", value = "定义流程KEY", dataType = "String", paramType = "path", example = "SampleProcess"),
+            @ApiImplicitParam(name = "param_map", value = "参数", dataType = "String", paramType = "path", example = "map")
     })
-    public RestMessage startProcess(
+    public RestMessage startProcessWithParams(
             @PathVariable("processDefinitionKey") String processDefinitionKey) {
 
         RestMessage restMessage = new RestMessage();
         ProcessInstance processInstance = null;
+        // 动态设置assignee的人
+        Map<String, Object> map = new HashMap<>();
+        map.put("employee", "zhangsan");
+        map.put("deptManager", "lisi");
+        map.put("boss", "wangwu");
+        map.put("hr", "renliu");
+        Holiday holiday = new Holiday();
+        holiday.setHolidayLength((double) 5F);
+        // 将请假对象(包含请假天数)传入
+        map.put("holiday", holiday);
         try {
             processInstance = processRuntime.start(ProcessPayloadBuilder
                     .start()
                     .withProcessDefinitionKey(processDefinitionKey)
-                    .withVariable("someProcessVar", "someProcVarValue")
-                    .withVariable("assignee", "other")
-                    .withVariable("msg", "重要情况")
+                    .withVariables(map)
                     .build());
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,4 +71,5 @@ public class ProcessStartController {
 
         return restMessage;
     }
+
 }
