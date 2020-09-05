@@ -131,22 +131,90 @@ Activiti 是一个工作流引擎（其实就是一堆 jar 包 API），业务�
 
 数据库表的命名规则：
 
-Activiti 的表都以 ACT_开头。 第二部分是表示表的用途的两个字母标识。 用途也和服务的 API 对
+Activiti 的表都以 ACT_开头。 第二部分是表示表的用途的两个字母标识。 用途也和服务的 API 对应。
 
-应。
+- ACT_RE_*: 'RE'表示 repository。 这个前缀的表包含了流程定义和流程静态资源 （图片，规则，等等）。
 
-- ACT_RE_*: 'RE'表示 repository。 这个前缀的表包含了流程定义和流程静态资源 （图片，
-
-规则，等等）。
-
-- ACT_RU_*: 'RU'表示 runtime。 这些运行时的表，包含流程实例，任务，变量，异步任务，
-
-等运行中的数据。 Activiti 只在流程实例执行过程中保存这些数据， 在流程结束时就会删
-
-除这些记录。 这样运行时表可以一直很小速度很快。
-
-- ACT_HI_*: 'HI'表示 history。 这些表包含历史数据，比如历史流程实例， 变量，任务等
-
-等。
+- ACT_RU_*: 'RU'表示 runtime。 这些运行时的表，包含流程实例，任务，变量，异步任务，等运行中的数据。 Activiti 只在流程实例执行过程中保存这些数据， 在流程结束时就会删除这些记录。 这样运行时表可以一直很小速度很快。_
+- ACT_HI_*: 'HI'表示 history。 这些表包含历史数据，比如历史流程实例， 变量，任务等等。
 
 - ACT_GE_*: GE 表示 general。通用数据， 用于不同场景下。
+
+
+
+## 四、用户处理任务后表中数据做了哪些变化
+
+#### 
+
+- **处理任务代码逻辑**
+
+  ![在这里插入图片描述](https://www.pianshen.com/images/592/8af27a34e532c784fe8b668b12541308.png)
+
+- **数据库表变化**
+
+1. **act_ru_task**表
+
+   ![在这里插入图片描述](https://www.pianshen.com/images/408/1bc38e9f47f5731697d7859e7710c7b0.png)
+   说明：由于sanding已经填写了请假申请单，因此activiti把表中原来那条记录给删除了。又新插入了一条了数据。而这条数据就是部门经理这个负责人进行请假单审批了。而这里字段ASSIGNEE为什么为null，是因为我们在流程实例化的时候，并没有添加具体的某个负责人。测试的时候，可以手动操作数据库去填写即可。
+
+2. **act_hi_actinst**表
+
+   ![在这里插入图片描述](https://www.pianshen.com/images/573/72d8e45e7a73c52c3972e406c6240abd.png)
+   说明：原来这张表有两条数据。2504这条数据的END_TIME是null的, 而当sanding这人负责人(只要有任务都是负责人)填写了请假申请单后，END_TIME字段就有值了。且，**又新插入**了一条数据5001,这条数据是任务流程图中的第三个环节，**刚好一个环节（节点，任务节点）一条行为的历史记录**，而且我们依然可以看见它的END_TIME字段依然为null。
+
+3. 通过分析sanding处理任务后，得到的结论。那么部门经理处理完任务后，也是同样的效果，继续向后面节点移动（领导审批（leader check））。而当leader check完成后，那么act_hi_actinst表中一定对应着5条记录，每个环节（每个节点）对应一条记录。而act_ru_task一定没有数据了。因为这个流程实例已经完成了。而为什么要删除，就是为了保证表中的数据量小，加快查询速度。
+
+4. 变化的不只是这两种表，凡是逻辑上相关联的表，数据都会变化的。但是在实际应用场景中，我们可以选择记录一些重要的信息，一些不重要的记录，就可以丢掉。
+
+5. 此操作影响的表有(可能操作不是特别规范，因为构建流程图的时候，是没有参与者，导致有些表其实是没有生成记录的，因此下表的第2条记录和第5条记录就没有数据)
+
+| 表名                | 是否受影响 |
+| :------------------ | :--------- |
+| act_hi_actinst      | 是         |
+| act_hi_identitylink | 是         |
+| act_hi_taskinst     | 是         |
+| act_ru_execution    | 是         |
+| act_ru_identitylink | 是         |
+| act_ru_task         | 是         |
+
+- 部门经理进行任务处理（lisi）这个名称是手动插入到数据的，自定义名称即可。
+  lisi未处理任务的时候，数据库表情况。
+  ![在这里插入图片描述](https://www.pianshen.com/images/810/d45fab596cc0678227745297e56f4fda.png)
+  代码查询演示
+  ![在这里插入图片描述](https://www.pianshen.com/images/535/99fc884d94f3f2a365062153fa1ca677.png)
+  控制台打印
+  ![在这里插入图片描述](https://www.pianshen.com/images/794/4e31ff86fb7e283a1b9e02fea96ae792.png)
+  lisi执行任务，代码逻辑演示
+  ![在这里插入图片描述](https://www.pianshen.com/images/936/f46324f8ecfbae2366fa6330b3ad88d8.png)
+
+数据库表变化
+
+1. act_ru_task
+   ![在这里插入图片描述](https://www.pianshen.com/images/32/d6138ffc72fdb550956843726fd51c50.png)
+   ASSIGNEE是null, 是因为我在流程定义的时候，未选择参与者，实际应用场景中一定是有的，不然审批没有任何意义。当wangwu去完成任务的时候，我们需要手动把wangwu赋值到ASSIGNEE字段上即可。
+   这里的结果，跟上文的推测，一模一样。
+2. act_hi_actinst
+   ![在这里插入图片描述](https://www.pianshen.com/images/110/b9e11c3df65857e3d537197933edd18e.png)
+   数据变化过程：跟上文分析sanding处理任务后是一样的。也跟推测一模一样的。
+
+- 领导进行任务处理(wangwu)这个名称是手动插入到数据的，自定义名称即可。
+  wangwu未执行任务时，代码逻辑演示
+
+![在这里插入图片描述](https://www.pianshen.com/images/745/32c33a7523f3d68154f4ca0691312f11.png)
+控制台打印
+![在这里插入图片描述](https://www.pianshen.com/images/998/cb68c05345042a0a5f7df52ab1dbc39e.png)
+
+wangwu未执行任务时，数据库act_ru_task表
+![在这里插入图片描述](https://www.pianshen.com/images/235/7c7c5ecf4b658bbf8b0e0a8f0d40cefb.png)
+
+wangwu处理任务代码逻辑
+![在这里插入图片描述](https://www.pianshen.com/images/535/34d730b0b936c2c8790d5ef685c4f887.png)
+
+wangwu处理任务后数据库表变化
+
+1. act_ru_task表（可以看见表中一条数据都没有了）
+   ![在这里插入图片描述](https://www.pianshen.com/images/318/645e9502e97fa7b3de2fbef61983c446.png)
+2. act_hi_actinst表（可以看见5条记录）
+   ![在这里插入图片描述](https://www.pianshen.com/images/481/f17e423b66bffea4fbd8ad95650cd431.png)
+   总结：流程定义图上有5个任务节点，分别是开始，填写申请单，部门经理审批，领导审批，结束。刚好对应5条记录。观察发现开始事件和结束时间的TASK_ID是null 。而这里的ASSIGNEE为什么是null可能跟自己定义流程图有关系。（后续找原因）
+   多注意字段END_TIME是否为null
